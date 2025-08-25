@@ -1,5 +1,14 @@
 package com.riad.dev.audio_fetcher
 
+import android.content.Context
+import android.content.ContentResolver
+import android.database.Cursor
+import android.provider.MediaStore
+import android.net.Uri
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import java.io.ByteArrayOutputStream
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -7,28 +16,27 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
 class AudioQueryPlugin: FlutterPlugin, MethodCallHandler {
-  private lateinit var channel: MethodChannel
-  private lateinit var context: Context
+    private lateinit var channel: MethodChannel
+    private lateinit var context: Context
 
-
-  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    context = binding.applicationContext
-    channel = MethodChannel(binding.binaryMessenger, "audio_fetcher")
-    channel.setMethodCallHandler(this)
-  }
-
-  override fun onMethodCall(call: MethodCall, result: Result) {
-    when (call.method) {
-      "getSongs" -> result.success(getSongs())
-      else -> result.notImplemented()
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        context = flutterPluginBinding.applicationContext
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "audio_fetcher")
+        channel.setMethodCallHandler(this)
     }
-  }
 
-  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
-  }
+    override fun onMethodCall(call: MethodCall, result: Result) {
+        when (call.method) {
+            "getSongs" -> result.success(getSongs())
+            else -> result.notImplemented()
+        }
+    }
 
-  private fun getSongs(): List<Map<String, Any?>> {
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        channel.setMethodCallHandler(null)
+    }
+
+    private fun getSongs(): List<Map<String, Any?>> {
         val songs = mutableListOf<Map<String, Any?>>()
         val resolver: ContentResolver = context.contentResolver
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -46,7 +54,7 @@ class AudioQueryPlugin: FlutterPlugin, MethodCallHandler {
             null
         )
 
-        cursor?.use {
+        cursor?.use { it ->
             val idCol = it.getColumnIndex(MediaStore.Audio.Media._ID)
             val titleCol = it.getColumnIndex(MediaStore.Audio.Media.TITLE)
             val artistCol = it.getColumnIndex(MediaStore.Audio.Media.ARTIST)
