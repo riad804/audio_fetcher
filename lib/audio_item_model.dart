@@ -1,23 +1,40 @@
 class AudioItemModel {
   final String title;
   final String artist;
+  final int? duration;
   final String path;
-  final String thumbnail;
+  final String? image;
 
   const AudioItemModel({
     required this.title,
     required this.artist,
+    required this.duration,
     required this.path,
-    required this.thumbnail,
+    required this.image,
   });
+
+  String get durationFormatted {
+    if (duration == null) return "0s";
+
+    final totalSeconds = duration! ~/ 1000;
+    final minutes = totalSeconds ~/ 60;
+    final seconds = totalSeconds % 60;
+
+    if (minutes > 0) {
+      return "${minutes}m ${seconds}s";
+    } else {
+      return "${seconds}s";
+    }
+  }
 
   /// Create object from JSON
   factory AudioItemModel.fromJson(Map<String, dynamic> json) {
     return AudioItemModel(
       title: json['title'] ?? '',
       artist: json['artist'] ?? '',
+      duration: json['duration'],
       path: json['path'] ?? '',
-      thumbnail: json['thumbnail'] ?? '',
+      image: json['image'],
     );
   }
 
@@ -26,46 +43,9 @@ class AudioItemModel {
     return {
       'title': title,
       'artist': artist,
+      'duration': duration,
       'path': path,
-      'thumbnail': thumbnail,
+      'image': image,
     };
-  }
-
-  /// Copy object with modified fields
-  AudioItemModel copyWith({
-    String? title,
-    String? artist,
-    String? path,
-    String? thumbnail,
-  }) {
-    return AudioItemModel(
-      title: title ?? this.title,
-      artist: artist ?? this.artist,
-      path: path ?? this.path,
-      thumbnail: thumbnail ?? this.thumbnail,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'AudioItemModel(title: $title, artist: $artist, path: $path, thumbnail: $thumbnail)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is AudioItemModel &&
-        other.title == title &&
-        other.artist == artist &&
-        other.path == path &&
-        other.thumbnail == thumbnail;
-  }
-
-  @override
-  int get hashCode {
-    return title.hashCode ^
-        artist.hashCode ^
-        path.hashCode ^
-        thumbnail.hashCode;
   }
 }

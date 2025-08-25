@@ -7,6 +7,8 @@ import android.provider.MediaStore
 import android.net.Uri
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
+import android.util.Base64
 import java.io.ByteArrayOutputStream
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -63,15 +65,16 @@ class AudioQueryPlugin: FlutterPlugin, MethodCallHandler {
 
             while (it.moveToNext()) {
                 val albumId = it.getLong(albumIdCol)
-                val image = getAlbumArt(albumId)
+                val (image, duration) = getAudioMetadata(dataCol.toString())
 
                 songs.add(
                     mapOf(
                         "id" to it.getLong(idCol),
                         "title" to it.getString(titleCol),
                         "artist" to it.getString(artistCol),
+                        "duration" to duration,
                         "path" to it.getString(dataCol),
-                        "image" to image // base64 thumbnail
+                        "image" to image
                     )
                 )
             }
@@ -79,17 +82,30 @@ class AudioQueryPlugin: FlutterPlugin, MethodCallHandler {
         return songs
     }
 
-    private fun getAlbumArt(albumId: Long): String? {
-        val albumUri = Uri.parse("content://media/external/audio/albumart")
-        val uri = Uri.withAppendedPath(albumUri, albumId.toString())
-        return try {
-            val input = context.contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(input)
-            val stream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream)
-            android.util.Base64.encodeToString(stream.toByteArray(), android.util.Base64.DEFAULT)
+    fun getAudioMetadata(filePath: String): Pair<String?, Long?> {
+        val retriever = MediaMetadataRetriever()
+        try {
+            // Set the data source (path to the audio file)
+            retriever.setDataSource(filePath)
+
+            // Get album art as a byte array
+            val albumArtBytes = retriever.embeddedPicture
+            val albumArtBase64 = albumArtBytes?.let {
+                Base64.encodeToString(it, Base64.DEFAULT)
+            }
+
+
+            // Get duration in milliseconds
+            val durationString = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            val duration = durationString?.toLongOrNull()
+
+            return Pair(albumArtBase64, duration)
         } catch (e: Exception) {
-            null
+            e.printStackTrace()
+            return Pair(null, null) // Return nulls in case of an error
+        } finally {
+            // Release the retriever to free resources
+            retriever.release()
         }
     }
 }
