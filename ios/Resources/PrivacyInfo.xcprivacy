@@ -10,5 +10,7 @@
 	<array/>
 	<key>NSPrivacyTracking</key>
 	<false/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app needs access to your music library.</string>
 </dict>
 </plist>

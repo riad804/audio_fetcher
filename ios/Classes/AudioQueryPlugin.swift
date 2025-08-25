@@ -3,7 +3,7 @@ import UIKit
 
 public class AudioQueryPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "audio_query", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: "audio_fetcher", binaryMessenger: registrar.messenger())
     let instance = CustomAudioQueryPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }

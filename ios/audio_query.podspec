@@ -3,7 +3,7 @@
 # Run `pod lib lint audio_query.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'audio_query'
+  s.name             = 'audio_fetcher'
   s.version          = '0.0.1'
   s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC

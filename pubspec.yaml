@@ -1,7 +1,7 @@
 name: audio_fetcher
 description: >
   A Flutter plugin for querying audio files (songs, music, recordings) from device storage on Android and iOS. Easily retrieve metadata such as title, artist, album, duration, and more.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/riad804/audio_fetcher
 
 environment:

@@ -13,7 +13,7 @@ class AudioQueryPlugin: FlutterPlugin, MethodCallHandler {
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     context = binding.applicationContext
-    channel = MethodChannel(binding.binaryMessenger, "audio_query")
+    channel = MethodChannel(binding.binaryMessenger, "audio_fetcher")
     channel.setMethodCallHandler(this)
   }
 
