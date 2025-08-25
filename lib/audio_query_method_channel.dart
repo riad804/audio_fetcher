@@ -8,7 +8,7 @@ import 'audio_query_platform_interface.dart';
 class MethodChannelAudioQuery extends AudioQueryPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('audio_query');
+  final methodChannel = const MethodChannel('audio_fetcher');
 
   @override
   Future<List<AudioItemModel>> getSongs() async {

@@ -6,7 +6,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelAudioQuery platform = MethodChannelAudioQuery();
-  const MethodChannel channel = MethodChannel('audio_query');
+  const MethodChannel channel = MethodChannel('audio_fetcher');
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
