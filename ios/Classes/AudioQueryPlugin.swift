@@ -1,10 +1,11 @@
 import Flutter
 import UIKit
+import MediaPlayer
 
 public class AudioQueryPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "audio_fetcher", binaryMessenger: registrar.messenger())
-    let instance = CustomAudioQueryPlugin()
+    let instance = AudioQueryPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
