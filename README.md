@@ -17,7 +17,7 @@ Add `audio_query` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  audio_query: ^0.0.1
+  audio_query: ^0.0.6
 ```
 
 #### Then run:
